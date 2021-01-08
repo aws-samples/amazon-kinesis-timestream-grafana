@@ -1,0 +1,12 @@
+{
+  "_comment": "Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. SPDX-License-Identifier: MIT-0",
+  "name": "Amazon Timestream",
+  "type": "grafana-timestream-datasource",
+  "access": "proxy",
+  "isDefault": true,
+  "jsonData": {
+    "defaultDatabase": "TimestreamDB",
+    "defaultTable": "SampleMetricsTable",
+    "defaultMeasure": "voltage_measure"
+  }
+}

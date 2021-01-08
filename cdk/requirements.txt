@@ -1,0 +1,20 @@
+# Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+#
+# Licensed under the MIT License. See the LICENSE accompanying this file
+# for the specific language governing permissions and limitations under
+# the License.
+
+-e .
+aws-cdk.aws-timestream
+aws-cdk.aws_kinesis
+aws-cdk.core
+aws_cdk.aws_events
+aws-cdk.aws-events-targets
+aws_cdk.aws_kinesisanalytics
+aws_cdk.aws_kinesis
+aws_cdk.aws_s3
+aws_cdk.aws_iam
+
+aws-cdk-aws_lambda_python
+aws-cdk.aws-ecs-patterns
