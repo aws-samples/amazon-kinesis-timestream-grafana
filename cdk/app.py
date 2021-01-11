@@ -2,10 +2,6 @@
 
 # Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
-#
-# Licensed under the MIT-0 License. See the LICENSE accompanying this file
-# for the specific language governing permissions and limitations under
-# the License.
 
 from amazon_timestream_stack import AmazonTimeStreamStack
 from aws_cdk import core
