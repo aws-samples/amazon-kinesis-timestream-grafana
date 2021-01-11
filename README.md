@@ -82,8 +82,8 @@ stacks use the `--all` option when invoking `cdk deploy`
 
 #### Check deployed resource and kick-off pipeline
 
-Once CDK stacks are deployed successfully you can check created AWS resources. You can directly run script `./setup.sh`
-or follow below instructions.
+Once CDK stacks are deployed successfully you can check created AWS resources. You can directly run
+script [`./setup.sh`](setup.sh) or follow below instructions.
 
 1. Amazon Kinesis Data Stream
 
@@ -129,7 +129,10 @@ or follow below instructions.
 ### 3. Visualizing Amazon Timestream values through Grafana
 
 To help you get started with data visualization, we have created a sample dashboard in Grafana that visualizes data sent
-to Timestream from the sample producer. You can also check the
+to Timestream from the sample producer. If you invoked the [`setup.sh`](setup.sh) script, it would have automatically
+performed these steps.
+
+You can also check the
 following [video tutorial](https://docs.aws.amazon.com/timestream/latest/developerguide/Grafana.html#Grafana.video-tutorial)
 or [complete guide](https://docs.aws.amazon.com/timestream/latest/developerguide/Grafana.html) for more information.
 
