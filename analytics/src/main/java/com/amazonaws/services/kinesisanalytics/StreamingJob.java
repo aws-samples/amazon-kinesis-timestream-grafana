@@ -88,7 +88,8 @@ public class StreamingJob {
 
         createKinesisSource(env, parameter)
                 .map(new JsonToTimestreamPayloadFn()).name("MaptoTimestreamPayload")
-                .addSink(new TimestreamSink(region, databaseName, tableName, batchSize)).name("TimeSeries<" + databaseName + ", " + tableName + ">");
+                .addSink(new TimestreamSink(region, databaseName, tableName, batchSize))
+                .name("TimeSeries<" + databaseName + ", " + tableName + ">");
 
         // execute program
         env.execute("Flink Streaming Java API Skeleton");
