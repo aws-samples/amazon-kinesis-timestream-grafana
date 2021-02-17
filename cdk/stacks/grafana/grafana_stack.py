@@ -109,7 +109,7 @@ class GrafanaStack(core.Stack):
             image=ecs.ContainerImage.from_registry("grafana/grafana"),
             logging=container_log_driver,
             environment={
-                "GF_INSTALL_PLUGINS": "grafana-timestream-datasource 1.1.0",
+                "GF_INSTALL_PLUGINS": "grafana-timestream-datasource",
                 "GF_AWS_default_REGION": core.Aws.REGION
             },
             secrets={
