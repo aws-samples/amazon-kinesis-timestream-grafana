@@ -56,4 +56,12 @@ command.
 * `cdk destroy`     Destroy the stacks already created
 * `cdk docs`        open CDK documentation
 
+## FAQ
+Q: When running `cdk deploy --all` I see the following error:  
+```
+Error [ValidationError]: Template format error: Unrecognized resource types: [AWS::Timestream::Table, AWS::Timestream::Database]
+```
+
+A: That means you are trying to deploy in a region where Timestream is currently not supported.
+
 Enjoy!

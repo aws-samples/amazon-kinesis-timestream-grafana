@@ -49,3 +49,5 @@ samconfig.toml
 # IntelliJ
 /.idea/
 *.iml
+
+.DS_Store
