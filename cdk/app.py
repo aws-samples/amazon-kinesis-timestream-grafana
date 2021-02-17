@@ -3,14 +3,14 @@
 # Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
 
-from amazon_timestream_stack import AmazonTimeStreamStack
+from stacks.amazon_timestream_stack import AmazonTimeStreamStack
 from aws_cdk import core
-from grafana.grafana_stack import GrafanaStack
-from kinesis.amazon_kinesis_analytics_source_stack import KinesisAnalyticsSource
-from kinesis.amazon_kinesis_analytics_stack import KinesisAnalyticsStack
-from kinesis.amazon_kinesis_stream_stack import KinesisStreamStack
+from stacks.grafana.grafana_stack import GrafanaStack
+from stacks.kinesis.amazon_kinesis_analytics_source_stack import KinesisAnalyticsSource
+from stacks.kinesis.amazon_kinesis_analytics_stack import KinesisAnalyticsStack
+from stacks.kinesis.amazon_kinesis_stream_stack import KinesisStreamStack
 from pathlib import Path
-from sample_kinesis_stream_producer.sample_kinesis_stream_producer_stack import SampleKinesisStreamProducerStack
+from stacks.sample_kinesis_stream_producer.sample_kinesis_stream_producer_stack import SampleKinesisStreamProducerStack
 
 app = core.App()
 
