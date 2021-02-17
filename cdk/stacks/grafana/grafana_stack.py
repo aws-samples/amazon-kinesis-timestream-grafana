@@ -135,7 +135,7 @@ class GrafanaStack(core.Stack):
         fargate_service.target_group.configure_health_check(path="/api/health")
         file_system.connections.allow_default_port_from(fargate_service.service.connections)
 
-        core.CfnOutput(self, "GrafanaAdminSecret", value=grafana_admin_password,
+        core.CfnOutput(self, "GrafanaAdminSecret", value=grafana_admin_password.secret_name,
                        export_name="GrafanaAdminSecret")
 
     def grant_timestream_read(self, execution_role, database, table):
