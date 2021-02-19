@@ -63,3 +63,5 @@ measures = [
 ]
 
 iterations = 10
+
+chance_of_anomaly = 0.051
