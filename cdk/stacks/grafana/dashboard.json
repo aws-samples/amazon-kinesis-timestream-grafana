@@ -329,7 +329,7 @@
             "fill": true,
             "line": true,
             "op": "gt",
-            "value": 290,
+            "value": 400,
             "yaxis": "left"
           },
           {

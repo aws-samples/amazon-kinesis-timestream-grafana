@@ -1,12 +1,12 @@
 # Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
 
-import boto3
 import json
 import random
 import time
 
-from config import device_ids, measures, iterations
+import boto3
+from config import device_ids, measures, iterations, chance_of_anomaly
 
 kinesis = boto3.client('kinesis')
 
@@ -16,7 +16,8 @@ def handler(event, context):
     for x in range(iterations):
         records = []
         for device_id in device_ids:
-            records.append(prepare_record(measures, device_id))
+            records.append(prepare_record(measures, device_id,
+                                          (iterations - x) / iterations * 60))
 
         print("records {}".format(len(records)))
         write_records(event["Stream"], records)
@@ -24,16 +25,21 @@ def handler(event, context):
     return {"records": sent}
 
 
-def prepare_record(some_measures, device_id):
-    current_time = int(time.time() * 1000)
+def prepare_record(some_measures, device_id, delta_seconds):
+    current_time = int((time.time() - delta_seconds) * 1000)
     record = {
         'Time': current_time,
         'DeviceID': device_id,
     }
 
     for measure_field in some_measures:
-        record[measure_field['measure'] + '_measure'] = \
-            random.uniform(measure_field['start'], measure_field['end'])
+        measure_value = random.uniform(measure_field['start'], measure_field['end'])
+        if random.random() < chance_of_anomaly:
+            if random.random() > 0.5:
+                measure_value = measure_value + measure_field['end']
+            else:
+                measure_value = measure_value - measure_field['start']
+        record[measure_field['measure'] + '_measure'] = measure_value
 
     return record
 
