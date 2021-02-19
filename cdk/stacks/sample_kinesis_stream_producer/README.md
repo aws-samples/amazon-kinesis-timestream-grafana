@@ -11,6 +11,7 @@ The lambda function will read configuration defined in `config.py` and interpret
 |device_ids|List of devices that will produce reading records for|
 |measures|List of measures to produce values for, every measure would nead to provide the following <br/>- measure: the measure name, examples (humidity, voltage, ...etc.) <br/>- start and end: 2 double values that the function will use to generate a uniformly distributed random value in this range. All measuments will contain only double values for this sample|
 |iterations| Number of times to rpeat the process of generating values for every device whenever the function is called|
+|chance_of_anomaly| Chance producer would intorduce a data point outside the range of start and end for a measure. Chance is uniform across all devices and number of iterations|
 
 ## Execution
 
