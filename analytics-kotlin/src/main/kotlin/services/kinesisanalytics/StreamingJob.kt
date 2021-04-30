@@ -5,12 +5,14 @@ package services.kinesisanalytics
 
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
+import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.datastream.DataStream
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer
 import org.apache.flink.streaming.connectors.kinesis.config.AWSConfigConstants
 import org.apache.flink.streaming.connectors.kinesis.config.ConsumerConfigConstants
 import services.kinesisanalytics.operators.JsonToTimestreamPayloadFn
+import services.kinesisanalytics.operators.OffsetFutureTimestreamPoints
 import services.kinesisanalytics.utils.ParameterToolUtils
 import services.timestream.TimestreamInitializer
 import services.timestream.TimestreamSink
@@ -97,8 +99,12 @@ object StreamingJob {
 
         createDatabaseAndTableIfNotExist(region, databaseName, tableName)
 
+        env.streamTimeCharacteristic = TimeCharacteristic.EventTime
+        env.config.autoWatermarkInterval = 1000L
+
         createKinesisSource(env, parameter)
             .map(JsonToTimestreamPayloadFn()).name("MaptoTimestreamPayload")
+            .process(OffsetFutureTimestreamPoints()).name("UpdateFutureOffsetedTimestreamPoints")
             .addSink(TimestreamSink(region, databaseName, tableName, batchSize))
             .name("TimestreamSink<$databaseName, $tableName>")
 

@@ -45,6 +45,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.apache.flink:flink-java:$flinkVersion")
     implementation("org.apache.flink:flink-streaming-java_$scalaBinaryVersion:$flinkVersion")
+    implementation("org.apache.flink:flink-clients_$scalaBinaryVersion:$flinkVersion")
     implementation("org.apache.flink:flink-connector-kinesis_$scalaBinaryVersion:$flinkVersion")
     implementation("com.google.code.gson:gson:$gsonVersion")
     implementation("com.amazonaws:aws-kinesisanalytics-runtime:$kdaVersion")

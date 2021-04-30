@@ -24,7 +24,7 @@ multiple Java versions ensure to export Java 11 to your `JAVA_HOME` environment 
    find them.
    ```shell
    $ ./gradlew clean build
-   $ ./gradlew run -Dexec.args="--InputStreamName TimestreamTestStream --TimestreamDbName TimestreamTestDatabase --TimestreamTableName TestTable"
+   $ ./gradlew run --args="--InputStreamName TimestreamTestStream --TimestreamDbName TimestreamTestDatabase --TimestreamTableName TestTable"
    ``` 
    NOTE: You might need to change the version of timestreamwrite and timestreamquery dependencies in `build.gradle` file
    based on the version of SDK jar you are using.
@@ -33,7 +33,7 @@ multiple Java versions ensure to export Java 11 to your `JAVA_HOME` environment 
    using `--TimestreamIngestBatchSize` option.
    ```shell
    $ ./gradlew  clean compile
-   $ ./gradlew run -Dexec.args="--InputStreamName TimestreamTestStream --TimestreamDbName TimestreamTestDatabase --TimestreamTableName TestTable --TimestreamIngestBatchSize 75"
+   $ ./gradlew run --args="--InputStreamName TimestreamTestStream --TimestreamDbName TimestreamTestDatabase --TimestreamTableName TestTable --TimestreamIngestBatchSize 75"
    ```    
 1. Package application for deployment in Amazon Kinesis Data Analytics for Apache Flink
 

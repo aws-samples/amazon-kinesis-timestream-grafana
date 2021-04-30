@@ -4,11 +4,13 @@
 package com.amazonaws.services.kinesisanalytics;
 
 import com.amazonaws.services.kinesisanalytics.operators.JsonToTimestreamPayloadFn;
+import com.amazonaws.services.kinesisanalytics.operators.OffsetFutureTimestreamPoints;
 import com.amazonaws.services.kinesisanalytics.utils.ParameterToolUtils;
 import com.amazonaws.services.timestream.TimestreamInitializer;
 import com.amazonaws.services.timestream.TimestreamSink;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
@@ -86,8 +88,12 @@ public class StreamingJob {
         timestreamInitializer.createDatabase(databaseName);
         timestreamInitializer.createTable(databaseName, tableName);
 
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.getConfig().setAutoWatermarkInterval(1000L);
+
         createKinesisSource(env, parameter)
                 .map(new JsonToTimestreamPayloadFn()).name("MaptoTimestreamPayload")
+                .process(new OffsetFutureTimestreamPoints()).name("UpdateFutureOffsetedTimestreamPoints")
                 .addSink(new TimestreamSink(region, databaseName, tableName, batchSize))
                 .name("TimeSeries<" + databaseName + ", " + tableName + ">");
 

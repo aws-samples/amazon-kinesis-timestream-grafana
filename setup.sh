@@ -39,13 +39,13 @@ echo "Created Grafana API token ${grafana_token}"
 printf "\n"
 
 # Use grafana API to create data source and dashboard
-curl -X POST --insecure \
+curl -X POST -k \
   -H "Content-Type: application/json" -H "Authorization: Bearer ${grafana_token}" \
   -d @./cdk/stacks/grafana/datasource.json \
   "${grafana_url}"/api/datasources
 printf "\n"
 
-curl -X POST --insecure \
+curl -X POST -k \
   -H "Content-Type: application/json" -H "Authorization: Bearer ${grafana_token}" \
   -d @./cdk/stacks/grafana/dashboard.json \
   "${grafana_url}"/api/dashboards/db

@@ -18,6 +18,7 @@ class JsonToTimestreamPayloadFn : RichMapFunction<String, Collection<TimestreamP
         private val LOG = LoggerFactory.getLogger(JsonToTimestreamPayloadFn::class.java)
     }
 
+    @Override
     @Throws(Exception::class)
     override fun map(jsonString: String): List<TimestreamPoint> {
         val map = Gson().fromJson<HashMap<String, String>>(
@@ -50,6 +51,5 @@ class JsonToTimestreamPayloadFn : RichMapFunction<String, Collection<TimestreamP
             }
             .collect(Collectors.toList())
     }
-
 
 }

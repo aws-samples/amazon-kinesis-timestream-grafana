@@ -51,3 +51,4 @@ samconfig.toml
 *.iml
 
 .DS_Store
+/acat*
