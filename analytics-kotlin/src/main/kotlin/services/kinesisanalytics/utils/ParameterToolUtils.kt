@@ -6,15 +6,14 @@ package services.kinesisanalytics.utils
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime
 import org.apache.flink.api.java.utils.ParameterTool
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 
 object ParameterToolUtils {
 
-    private fun fromApplicationProperties(properties: Properties): ParameterTool {
-        val map: MutableMap<String?, String?> = HashMap(properties.size)
-        properties.forEach { k: Any?, v: Any? -> map[k as String?] = v as String? }
+    private fun Properties.asParameterTool(): ParameterTool {
+        val map: MutableMap<String?, String?> = HashMap(this.size)
+        this.forEach { k: Any?, v: Any? -> map[k as String?] = v as String? }
         return ParameterTool.fromMap(map)
     }
 
@@ -26,7 +25,7 @@ object ParameterToolUtils {
         val applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties()
         val flinkProperties = applicationProperties["FlinkApplicationProperties"]
         if (flinkProperties != null) {
-            parameter = parameter.mergeWith(fromApplicationProperties(flinkProperties))
+            parameter = parameter.mergeWith(flinkProperties.asParameterTool())
         }
         return parameter
     }

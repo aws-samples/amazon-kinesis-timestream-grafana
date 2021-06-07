@@ -43,26 +43,19 @@ object StreamingJob {
         //set Kinesis consumer properties
         val kinesisConsumerConfig = Properties()
         //set the region the Kinesis stream is located in
-        kinesisConsumerConfig.setProperty(
-            AWSConfigConstants.AWS_REGION,
-            parameter["Region", DEFAULT_REGION_NAME]
-        )
+        kinesisConsumerConfig[AWSConfigConstants.AWS_REGION] = parameter["Region", DEFAULT_REGION_NAME]
         //obtain credentials through the DefaultCredentialsProviderChain, which includes the instance metadata
-        kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_CREDENTIALS_PROVIDER, "AUTO")
+        kinesisConsumerConfig[AWSConfigConstants.AWS_CREDENTIALS_PROVIDER] = "AUTO"
         val adaptiveReadSettingStr = parameter["SHARD_USE_ADAPTIVE_READS", "false"]
         if (adaptiveReadSettingStr == "true") {
-            kinesisConsumerConfig.setProperty(ConsumerConfigConstants.SHARD_USE_ADAPTIVE_READS, "true")
+            kinesisConsumerConfig[ConsumerConfigConstants.SHARD_USE_ADAPTIVE_READS] = "true"
         } else {
             //poll new events from the Kinesis stream once every second
-            kinesisConsumerConfig.setProperty(
-                ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS,
+            kinesisConsumerConfig[ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS] =
                 parameter["SHARD_GETRECORDS_INTERVAL_MILLIS", "1000"]
-            )
             // max records to get in shot
-            kinesisConsumerConfig.setProperty(
-                ConsumerConfigConstants.SHARD_GETRECORDS_MAX,
+            kinesisConsumerConfig[ConsumerConfigConstants.SHARD_GETRECORDS_MAX] =
                 parameter["SHARD_GETRECORDS_MAX", "10000"]
-            )
         }
 
         val stream = parameter["InputStreamName", DEFAULT_STREAM_NAME]
