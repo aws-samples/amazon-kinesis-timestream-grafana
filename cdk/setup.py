@@ -3,18 +3,18 @@
 
 import setuptools
 
-with open("README.md") as fp:
+with open("../README.md") as fp:
     long_description = fp.read()
 
 setuptools.setup(
     name="cdk",
     version="0.0.1",
 
-    description="An empty CDK Python app",
+    description="CDK stack to create near real time event processing and visualizations",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    author="author",
+    author="Sascha Janssen and John Mousa",
 
     package_dir={"": "stacks"},
     packages=setuptools.find_packages(where="stacks"),

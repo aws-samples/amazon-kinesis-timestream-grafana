@@ -17,7 +17,7 @@ class OffsetFutureTimestreamPoints : ProcessFunction<Collection<TimestreamPoint>
         points: Collection<TimestreamPoint>, ctx: Context,
         out: Collector<Collection<TimestreamPoint>>
     ) {
-        points.stream()
+        points.asSequence()
             .filter { pointTimestamp(it) > System.currentTimeMillis() + TIMESTREAM_FUTURE_THRESHOLD }
             .forEach {
                 it.time = ctx.timestamp()

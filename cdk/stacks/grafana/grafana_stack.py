@@ -29,6 +29,9 @@ class GrafanaStack(core.Stack):
 
         vpc = ec2.Vpc(self, "GrafanaVpc", max_azs=2)
 
+        vpc.add_interface_endpoint('EFSEndpoint', service=ec2.InterfaceVpcEndpointAwsService.ELASTIC_FILESYSTEM)
+        vpc.add_interface_endpoint('SMEndpoint', service=ec2.InterfaceVpcEndpointAwsService.SECRETS_MANAGER)
+
         cluster = ecs.Cluster(self, "MyCluster", vpc=vpc)
 
         file_system = efs.FileSystem(
@@ -129,7 +132,7 @@ class GrafanaStack(core.Stack):
             desired_count=1,
             task_definition=task_definition,
             memory_limit_mib=2048,
-            platform_version=ecs.FargatePlatformVersion.VERSION1_4
+            platform_version=ecs.FargatePlatformVersion.LATEST
         )
 
         fargate_service.target_group.configure_health_check(path="/api/health")

@@ -22,61 +22,63 @@ class KinesisAnalyticsStack(core.Stack):
 
         batch_size_param = core.CfnParameter(self, "batchSizeParam", type="Number",
                                              min_value=1, max_value=100, default=75,
-                                             description="Number of recoreds ingested from stream before flushing to "
+                                             description="Number of records ingested from stream before flushing to "
                                                          "Timestream database")
-
-        kda_application = kda.CfnApplicationV2(self, "KdaApplication",
-                                               runtime_environment="FLINK-1_11",
-                                               service_execution_role=kda_role.role_arn,
-                                               application_name=core.Aws.STACK_NAME,
-                                               application_configuration={
-                                                   "environmentProperties": {
-                                                       "propertyGroups": [
-                                                           {
-                                                               "propertyGroupId": "FlinkApplicationProperties",
-                                                               "propertyMap": {
-                                                                   "InputStreamName": stream.stream_name,
-                                                                   "Region": core.Aws.REGION,
-                                                                   "TimestreamDbName": db_name,
-                                                                   "TimestreamTableName": table_name,
-                                                                   "TimestreamIngestBatchSize": batch_size_param.value_as_number
-                                                               },
-                                                           },
-                                                       ]
-                                                   },
-                                                   "flinkApplicationConfiguration": {
-                                                       "monitoringConfiguration": {
-                                                           "logLevel": "INFO",
-                                                           "metricsLevel": "TASK",
-                                                           "configurationType": "CUSTOM"
-                                                       },
-                                                       "parallelismConfiguration": {
-                                                           "autoScalingEnabled": False,
-                                                           "parallelism": 1,
-                                                           "parallelismPerKpu": 1,
-                                                           "configurationType": "CUSTOM"
-                                                       },
-                                                       "checkpointConfiguration": {
-                                                           "configurationType": "CUSTOM",
-                                                           "checkpointInterval": 60_000,
-                                                           "minPauseBetweenCheckpoints": 60_000,
-                                                           "checkpointingEnabled": True
-                                                       }
-                                                   },
-                                                   "applicationSnapshotConfiguration": {
-                                                       "snapshotsEnabled": False
-                                                   },
-                                                   "applicationCodeConfiguration": {
-                                                       "codeContent": {
-                                                           "s3ContentLocation": {
-                                                               "bucketArn": asset.bucket.bucket_arn,
-                                                               "fileKey": asset.s3_object_key
-                                                           }
-                                                       },
-                                                       "codeContentType": "ZIPFILE"
-                                                   },
-                                               }
-                                               )
+        kda_application = kda.CfnApplicationV2(
+            self, "KdaApplication",
+            runtime_environment="FLINK-1_11",
+            service_execution_role=kda_role.role_arn,
+            application_name=core.Aws.STACK_NAME,
+            application_configuration=
+            kda.CfnApplicationV2.ApplicationConfigurationProperty(
+                application_code_configuration=kda.CfnApplicationV2.ApplicationCodeConfigurationProperty(
+                    code_content=kda.CfnApplicationV2.CodeContentProperty(
+                        s3_content_location=kda.CfnApplicationV2.S3ContentLocationProperty(
+                            bucket_arn=asset.bucket.bucket_arn,
+                            file_key=asset.s3_object_key
+                        )
+                    ),
+                    code_content_type="ZIPFILE"
+                ),
+                environment_properties=kda.CfnApplicationV2.EnvironmentPropertiesProperty(
+                    property_groups=[
+                        kda.CfnApplicationV2.PropertyGroupProperty(
+                            property_group_id="FlinkApplicationProperties",
+                            property_map={
+                                "InputStreamName": stream.stream_name,
+                                "Region": core.Aws.REGION,
+                                "TimestreamDbName": db_name,
+                                "TimestreamTableName": table_name,
+                                "TimestreamIngestBatchSize": batch_size_param.value_as_number
+                            }
+                        )
+                    ]
+                ),
+                application_snapshot_configuration=kda.CfnApplicationV2.ApplicationSnapshotConfigurationProperty(
+                    snapshots_enabled=False
+                ),
+                flink_application_configuration=kda.CfnApplicationV2.FlinkApplicationConfigurationProperty(
+                    monitoring_configuration=kda.CfnApplicationV2.MonitoringConfigurationProperty(
+                        configuration_type="CUSTOM",
+                        log_level="INFO",
+                        metrics_level="TASK"
+                    ),
+                    parallelism_configuration=kda.CfnApplicationV2.ParallelismConfigurationProperty(
+                        configuration_type="CUSTOM",
+                        auto_scaling_enabled=False,
+                        parallelism=1,
+                        parallelism_per_kpu=1
+                    ),
+                    checkpoint_configuration=kda.CfnApplicationV2.CheckpointConfigurationProperty(
+                        configuration_type="CUSTOM",
+                        # the properties below are optional
+                        checkpointing_enabled=True,
+                        checkpoint_interval=60_000,
+                        min_pause_between_checkpoints=60_000
+                    )
+                )
+            )
+        )
 
         kda_logging = kda.CfnApplicationCloudWatchLoggingOptionV2(
             self, "FlinkLogging",

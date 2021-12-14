@@ -18,9 +18,7 @@ import org.apache.flink.runtime.state.FunctionSnapshotContext
 import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction
 import org.slf4j.LoggerFactory
-import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
-import java.util.stream.Collectors
 
 /**
  * Sink function for Flink to ingest data to Timestream
@@ -93,22 +91,21 @@ class TimestreamSink(
     }
 
     private fun createRecords(points: Collection<TimestreamPoint>): Collection<Record> {
-        return points.stream()
+        return points.asSequence()
             .map {
                 Record()
                     .withDimensions(
-                        it.getDimensions().entries.stream()
+                        it.getDimensions().entries
                             .map { entry ->
                                 Dimension().withName(entry.key).withValue(entry.value)
-                            }.collect(Collectors.toList())
+                            }
                     )
                     .withMeasureName(it.measureName)
                     .withMeasureValueType(it.measureValueType)
                     .withMeasureValue(it.measureValue)
                     .withTimeUnit(it.timeUnit)
                     .withTime(it.time.toString())
-            }
-            .collect(Collectors.toList())
+            }.toList()
     }
 
     // Method to validate if record batch should be published.

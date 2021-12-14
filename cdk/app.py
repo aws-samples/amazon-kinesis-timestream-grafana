@@ -3,13 +3,14 @@
 # Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
 
-from stacks.amazon_timestream_stack import AmazonTimeStreamStack
 from aws_cdk import core
+from pathlib import Path
+
+from stacks.amazon_timestream_stack import AmazonTimeStreamStack
 from stacks.grafana.grafana_stack import GrafanaStack
 from stacks.kinesis.amazon_kinesis_analytics_source_stack import KinesisAnalyticsSource
 from stacks.kinesis.amazon_kinesis_analytics_stack import KinesisAnalyticsStack
 from stacks.kinesis.amazon_kinesis_stream_stack import KinesisStreamStack
-from pathlib import Path
 from stacks.sample_kinesis_stream_producer.sample_kinesis_stream_producer_stack import SampleKinesisStreamProducerStack
 
 app = core.App()
@@ -28,9 +29,9 @@ if not Path(kda_path).is_file():
 
 timestream_stack = AmazonTimeStreamStack(app, "amazon-timestream")
 
-kinesis_stream = KinesisStreamStack(app, 'amazon-kinesis-stream-stack')
+kinesis_stream = KinesisStreamStack(app, 'amazon-kinesis-stream')
 
-kinesis_analytics_source_stack = KinesisAnalyticsSource(app, "flink-source-bucket",
+kinesis_analytics_source_stack = KinesisAnalyticsSource(app, "flink-source",
                                                         stream=kinesis_stream.stream,
                                                         kda_path=kda_path,
                                                         database=timestream_stack.database,

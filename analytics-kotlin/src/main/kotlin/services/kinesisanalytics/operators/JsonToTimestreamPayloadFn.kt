@@ -10,7 +10,6 @@ import org.apache.flink.api.common.functions.RichMapFunction
 import org.slf4j.LoggerFactory
 import services.timestream.TimestreamPoint
 import java.util.*
-import java.util.stream.Collectors
 
 class JsonToTimestreamPayloadFn : RichMapFunction<String, Collection<TimestreamPoint>>() {
 
@@ -29,12 +28,12 @@ class JsonToTimestreamPayloadFn : RichMapFunction<String, Collection<TimestreamP
         val measures = HashMap<String, String>(map.size)
 
         for ((key, value) in map) {
-            if (key.toLowerCase().endsWith("_measure")) {
+            if (key.lowercase(Locale.ENGLISH).endsWith("_measure")) {
                 measures[key] = value
                 continue
             }
 
-            when (key.toLowerCase()) {
+            when (key.lowercase(Locale.ENGLISH)) {
                 "time" -> basePoint.time = value.toLong()
                 "timeunit" -> basePoint.timeUnit = value
                 else -> basePoint.addDimension(key, value)
@@ -42,14 +41,14 @@ class JsonToTimestreamPayloadFn : RichMapFunction<String, Collection<TimestreamP
         }
         LOG.trace("mapped to point {}", basePoint)
 
-        return measures.entries.stream()
+        return measures.entries.asSequence()
             .map {
                 basePoint.copy(
                     measureName = it.key, measureValue = it.value,
                     measureValueType = MeasureValueType.DOUBLE
                 )
             }
-            .collect(Collectors.toList())
+            .toList()
     }
 
 }
